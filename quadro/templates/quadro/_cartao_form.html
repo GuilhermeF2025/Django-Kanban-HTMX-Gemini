@@ -1,0 +1,5 @@
+<form hx-post="{% url 'adicionar_cartao' coluna.id %}" hx-target="#card-list-{{ coluna.id }}" hx-swap="beforeend">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-salvar">Salvar</button>
+</form>

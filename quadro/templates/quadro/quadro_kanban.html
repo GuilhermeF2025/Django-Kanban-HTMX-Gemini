@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Quadro Kanban Interativo</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'css/kanban.css' %}">
+</head>
+<body>
+    <header style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Meu Quadro Kanban</h1>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Olá, {{ user.username }}</span>
+                {# AQUI ESTÁ A MUDANÇA: Apontamos para a nossa nova URL de logout #}
+                <a href="#" hx-post="{% url 'logout_customizado' %}" style="margin-left: 15px;">Sair</a>
+            {% else %}
+                <a href="{% url 'login' %}">Entrar</a>
+                <a href="{% url 'registrar' %}" style="margin-left: 15px;">Registrar</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if user.is_authenticated %}
+    <div class="kanban-board">
+        {% for coluna in colunas %}
+            {% include 'quadro/_coluna.html' with coluna=coluna %}
+        {% endfor %}
+
+        <div class="kanban-column add-column-form">
+            <h2>Nova Coluna</h2>
+            <form hx-post="{% url 'adicionar_coluna' %}"
+                  hx-target=".kanban-board" 
+                  hx-swap="beforeend"
+                  hx-on::after-request="this.reset()">
+                {% csrf_token %}
+                {{ coluna_form.as_p }}
+                <button type="submit" class="add-card-btn">Criar Coluna</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+        <p>Por favor, <a href="{% url 'login' %}">faça login</a> para ver seu quadro Kanban.</p>
+    {% endif %}
+
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = document.querySelector('meta[name="csrf-token"]').content;
+        });
+        
+        function initSortable(list) {
+            new Sortable(list, {
+                group: 'kanban',
+                animation: 150,
+                onEnd: function (evt) {
+                    const targetList = evt.to;
+                    const colunaId = targetList.dataset.colunaId;
+                    const cartaoInputs = targetList.querySelectorAll('[name="cartao_ordem"]');
+                    const cartaoIds = Array.from(cartaoInputs).map(input => input.value);
+                    const dataToSend = { 'colunaId': colunaId, 'cartao_ordem': cartaoIds };
+                    targetList.setAttribute('hx-vals', JSON.stringify(dataToSend));
+                    htmx.trigger(targetList, 'endDrag');
+                }
+            });
+        }
+        
+        document.querySelectorAll('.card-list').forEach(initSortable);
+
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            let newCardLists = event.detail.target.querySelectorAll('.card-list');
+            if (newCardLists.length > 0) {
+                newCardLists.forEach(initSortable);
+            }
+        });
+    </script>
+</body>
+</html>

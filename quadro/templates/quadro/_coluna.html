@@ -1,0 +1,13 @@
+<div class="kanban-column">
+    <h2>{{ coluna.titulo }}</h2>
+    <div class="card-list"
+         id="card-list-{{ coluna.id }}"
+         data-coluna-id="{{ coluna.id }}"
+         hx-post="{% url 'mover_cartao' %}"
+         hx-trigger="endDrag">
+        {% for cartao in coluna.cartoes.all %}
+            {% include 'quadro/_cartao.html' with cartao=cartao %}
+        {% endfor %}
+    </div>
+    {% include 'quadro/_add_card_button.html' with coluna=coluna %}
+</div>

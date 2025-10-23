@@ -1,0 +1,8 @@
+<div id="form-container-{{ coluna.id }}">
+    <button class="add-card-btn"
+            hx-get="{% url 'adicionar_cartao' coluna.id %}"
+            hx-target="#form-container-{{ coluna.id }}"
+            hx-swap="innerHTML">
+        + Adicionar Cartão
+    </button>
+</div>

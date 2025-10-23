@@ -1,0 +1,18 @@
+{% comment %} 
+  Este é o conteúdo principal que será enviado para o hx-target do formulário
+  {% endcomment %}
+{% include 'quadro/_cartao.html' with cartao=cartao %}
+{% comment %} 
+  Este é o conteúdo "Out of Band". 
+  O atributo hx-swap-oob="true" diz ao HTMX: "Não coloque este HTML no alvo principal. 
+  Em vez disso, encontre o elemento na página com o mesmo ID ('form-container-...') 
+  e substitua-o por este novo div".
+{% endcomment %}
+<div id="form-container-{{ coluna.id }}" hx-swap-oob="true">
+    <button class="add-card-btn"
+            hx-get="{% url 'adicionar_cartao' coluna.id %}"
+            hx-target="#form-container-{{ coluna.id }}"
+            hx-swap="innerHTML">
+        + Adicionar Cartão
+    </button>
+</div>
