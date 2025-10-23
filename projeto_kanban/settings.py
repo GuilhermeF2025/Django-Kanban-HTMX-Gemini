@@ -117,7 +117,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = BASE_DIR / 'static'
+# A fonte onde o Django procura seus arquivos estáticos.
+# Mantenha esta como está.
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Adicione esta linha para dizer ao Django para procurar arquivos estáticos
 # na pasta 'static' que criamos na raiz do projeto.
