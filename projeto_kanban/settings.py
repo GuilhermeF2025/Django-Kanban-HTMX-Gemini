@@ -117,6 +117,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# O destino para onde o collectstatic vai copiar os arquivos.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # A fonte onde o Django procura seus arquivos estáticos.
 # Mantenha esta como está.
 STATICFILES_DIRS = [
