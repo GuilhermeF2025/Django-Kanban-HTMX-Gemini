@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^9%#hdk+&c^21bk&%e2uplx7b8#r!f*1_*adjqvsg*p7%s1d-v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['brasilalpharesearch.cloud']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -138,4 +138,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Informa ao Django qual URL usar para redirecionamentos de login.
 # O Django usará a URL que tem o nome 'login'. No nosso caso, é '/contas/login/'.
+
 LOGIN_URL = 'login'
